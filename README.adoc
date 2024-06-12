@@ -1,8 +1,8 @@
 = Bank Operation
 
-== Objective:
+== Objective
 
-== To implement a RESTful service for bank operations. such as deposit, withdraw, transfer, and balance check.
+To implement a RESTful service for bank operations. such as deposit, withdraw, transfer, and balance check.
 
 === Pre-Requirements
 
@@ -22,23 +22,21 @@ To generate a token, you can use the following curl command:
 
 [source,bash]
 ----
-curl "http://127.0.0.1:8081/token/generate/?username=alice&role=alice"
+curl "http://127.0.0.1:8081/token/generate/?username=shashi&role=admin"
 ----
 
 == Technologies
 
-————
-- `Spring Boot`
-- `Spring MVC`, for creating RESTful API
-- `postgres`, database for persisting the customer information
-- `Docker`, for containerization of services
-- `Docker-Compose`, to link the containers
-- `Swagger`, Swagger-UI, for API documentation
-- `Actuator`, Monitoring the app, gathering metrics, understanding traffic.
-- `JaCoCo`, for code coverage
-- `Pit-Test`, for mutation testing
-- `Sonar`, for code quality
-- `Testcontainers`, for unit test
+* `Spring Boot >3`
+*  `Spring MVC`, for creating RESTful API
+*  `postgres`, database for persisting the customer information
+*  `Docker`, for containerization of services
+*  `Docker-Compose`, to link the containers
+*  `Actuator`, Monitoring the app, gathering metrics, understanding traffic.
+*  `JaCoCo`, for code coverage
+*  `Pit-Test`, for mutation testing
+*  `Sonar`, for code quality
+*  `Testcontainers`, for unit test
 
 == How to's
 
@@ -50,9 +48,7 @@ curl "http://127.0.0.1:8081/token/generate/?username=alice&role=alice"
 
 * `make test`
 
-####
-
-==== mutation testing
+=== mutation testing
 
 * `mvn clean install org.pitest:pitest-maven:mutationCoverage`
 
@@ -86,7 +82,7 @@ ____
 
 ____
 
-.
+. <>?
 
 ____
 
