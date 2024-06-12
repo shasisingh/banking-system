@@ -70,4 +70,9 @@ public class DBHelperUtil {
         return accountRepository.save(account);
     }
 
+    public void cleanUpIfAnyDBData() {
+        accountRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
+
 }

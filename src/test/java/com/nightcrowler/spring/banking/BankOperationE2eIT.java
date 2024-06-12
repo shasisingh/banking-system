@@ -9,6 +9,7 @@ import com.nightcrowler.spring.banking.security.JwtGenerator;
 import com.nightcrowler.spring.banking.utils.DBHelperUtil;
 import com.nightcrowler.spring.banking.utils.TestDbContainerInitializer;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,12 +42,14 @@ class BankOperationE2eIT {
     @BeforeAll
     public static void setUpAll(@Autowired CustomerRepository customerRepository, @Autowired AccountRepository accountRepository, @Autowired JwtGenerator jwtGenerator) {
         dbHelperUtil = new DBHelperUtil(customerRepository, accountRepository);
+        dbHelperUtil.cleanUpIfAnyDBData() ;
         BankOperationE2eIT.jwtGenerator = jwtGenerator;
     }
 
     @BeforeEach
     public void setup() {
         RestAssured.port = port;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(LogDetail.ALL);
     }
 
     @Test
@@ -187,7 +190,7 @@ class BankOperationE2eIT {
     @Test
     @DisplayName("Test getting customer by id")
     void testGetCustomerById() {
-        var newCust = dbHelperUtil.createCustomer();
+        var newCust = dbHelperUtil.createCustomer("TRgr3pZHGx");
         given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer %s".formatted(generateToken("xman")))
@@ -200,7 +203,7 @@ class BankOperationE2eIT {
     @Test
     @DisplayName("Test add new account")
     void testAddAccount() {
-        var newCust = dbHelperUtil.createCustomer();
+        var newCust = dbHelperUtil.createCustomer("3ZCHEQrT565");
         given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer %s".formatted(generateToken("earth-616")))
@@ -223,6 +226,6 @@ class BankOperationE2eIT {
     }
 
     private String generateToken(String username) {
-        return jwtGenerator.generate(username,"admin");
+        return jwtGenerator.generate(username, "admin");
     }
 }

@@ -10,6 +10,7 @@ import com.nightcrowler.spring.banking.model.AccountDto;
 import com.nightcrowler.spring.banking.model.AccountOperationDto;
 import com.nightcrowler.spring.banking.model.MoneyTransferDto;
 import com.nightcrowler.spring.banking.repository.AccountRepository;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @Service
 @Slf4j
@@ -40,7 +43,7 @@ public class AccountTransactionService {
                 .log("Performing transfer.");
 
         try {
-            reentrantLock.lock();
+            acquireLock(reentrantLock);
             return transfer(moneyTransfer.getCreditor(), moneyTransfer.getDebtor(), moneyTransfer.getAmount())
                     .map(AccountDto::new)
                     .orElseThrow(AccountTransferException::new);
@@ -59,7 +62,7 @@ public class AccountTransactionService {
                 .log();
 
         try {
-            reentrantLock.lock();
+            acquireLock(reentrantLock);
             return debit(accountWithdrawDto.getOriginatorAccount(), accountWithdrawDto.getAmount())
                     .map(AccountDto::new)
                     .orElseThrow(AccountWithdrawException::new);
@@ -67,6 +70,7 @@ public class AccountTransactionService {
             reentrantLock.unlock();
         }
     }
+
     public AccountDto deposit(AccountOperationDto depositDto) {
 
         log.atDebug()
@@ -75,7 +79,7 @@ public class AccountTransactionService {
                 .log();
 
         try {
-            reentrantLock.lock();
+            acquireLock(reentrantLock);
             return credit(depositDto.getOriginatorAccount(), depositDto.getAmount())
                     .map(AccountDto::new)
                     .orElseThrow(AccountWithdrawException::new);
@@ -105,7 +109,7 @@ public class AccountTransactionService {
     private Optional<Account> credit(final AccountDto accountNumber, final BigDecimal amount) {
         return accountRepository.findActiveAccount(accountNumber.getAccountNumber(), accountNumber.getCurrencyCode(), accountNumber.getRelationNumber())
                 .map((Account account) -> {
-                        account.credit(amount);
+                    account.credit(amount);
                     return Optional.of(accountRepository.save(account));
                 })
                 .orElseThrow(AccountNotFoundException::new);
@@ -120,6 +124,28 @@ public class AccountTransactionService {
                 })
                 .orElseThrow(AccountNotFoundException::new);
 
+    }
+
+
+    @SneakyThrows
+    private void acquireLock(Lock localLock)  {
+        try {
+            boolean receivedLock = localLock.tryLock(1500, MILLISECONDS);
+            if (!receivedLock) {
+                log.atWarn()
+                        .addKeyValue("receivedLock", receivedLock)
+                        .log("Failed to acquire lock.");
+                throw new InterruptedException("Failed to acquire lock within the specified time.");
+            }
+            log.atDebug()
+                    .addKeyValue("receivedLock", receivedLock)
+                    .log("Lock acquired.");
+        } catch (InterruptedException e) {
+            log.atError()
+                    .setCause(e)
+                    .log("Error while acquiring lock.");
+            throw e;
+        }
     }
 
 
