@@ -208,6 +208,7 @@ class BankOperationE2eIT {
                          {
                                 "accountType": "SAVINGS",
                                 "accountBalance": 100.01,
+                                "currencyCode": "EUR",
                                 "accountNumber": "NL2000000000000001",
                                 "relationNumber": "%s"
                             }
