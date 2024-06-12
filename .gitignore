@@ -35,3 +35,19 @@ logs
 
 .mvn
 mvnw.cmd
+mvnw
+**/.idea
+**/*.iml
+**/*.bak
+**/*.log
+**/*.orig
+**/*.versionsBackup
+**/target
+*.cer
+*.p12
+**/logs
+**/test-dir
+**/pid
+**/.gradle
+**/*.DS_Store
+**/*.surefire-*
