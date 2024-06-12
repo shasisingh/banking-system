@@ -1,0 +1,21 @@
+server:
+  port: 0
+  shutdown: graceful
+spring:
+  application:
+    name: my-personal-bank
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-index: 10
+  level:
+    com:
+      nightcrowler:
+        spring:
+          banking: DEBUG

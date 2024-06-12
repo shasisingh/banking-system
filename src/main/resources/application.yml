@@ -1,0 +1,43 @@
+server:
+  port: 8081
+  shutdown: graceful
+spring:
+  application:
+    name: my-personal-bank
+  datasource:
+    driverClassName: org.postgresql.Driver
+    password: "fake-bank-db-password"
+    url: "jdbc:postgresql://localhost:5432/fake-bank-db"
+    username: "bank-user"
+  h2:
+    console:
+      enabled: true
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: false
+        type: index
+        use_sql_comments: false
+    show-sql: false
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  file:
+    path: ${user.dir}/logs
+  logback:
+    rollingpolicy:
+      max-index: 10
+      max-file-size: 10MB
+
+security:
+  secret: "fake-bank-secret@4f6db2d788a54a9cae790fabea3268f2"

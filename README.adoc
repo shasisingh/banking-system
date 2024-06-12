@@ -1,0 +1,130 @@
+= Bank Operation
+
+== Objective:
+
+== To implement a RESTful service for bank operations. such as deposit, withdraw, transfer, and balance check.
+
+=== Pre-Requirements
+
+* https://openjdk.org/projects/jdk/17/[jdk17]
+* https://docs.docker.com/compose/install/[docker-compose]
+* https://docs.docker.com/get-docker/[docker]
+* https://maven.apache.org/download.cgi[maven]
+* https://formulae.brew.sh/formula/make[make]
+* for sonar verification you need to have user/password and placed inside setting.xml
+
+== Security
+
+* Api is protected with jwt authentication, you need to pass jwt token in header for each request.
+* 
+
+To generate a token, you can use the following curl command:
+
+[source,bash]
+----
+curl "http://127.0.0.1:8081/token/generate/?username=alice&role=alice"
+----
+
+== Technologies
+
+————
+- `Spring Boot`
+- `Spring MVC`, for creating RESTful API
+- `postgres`, database for persisting the customer information
+- `Docker`, for containerization of services
+- `Docker-Compose`, to link the containers
+- `Swagger`, Swagger-UI, for API documentation
+- `Actuator`, Monitoring the app, gathering metrics, understanding traffic.
+- `JaCoCo`, for code coverage
+- `Pit-Test`, for mutation testing
+- `Sonar`, for code quality
+- `Testcontainers`, for unit test
+
+== How to's
+
+=== Run
+
+* `make run-apps`
+
+== Test
+
+* `make test`
+
+####
+
+==== mutation testing
+
+* `mvn clean install org.pitest:pitest-maven:mutationCoverage`
+
+____
+
+You can access the report at : `{project-dir}/target/pit-reports/{currenttime}/index.html`
+
+____
+
+=== Build with report
+
+* `make report`
+
+____
+
+You can access the report at `/{project_path}/target/site/jacoco/index.html`
+
+____
+
+=== Sonar
+
+* `make start` (to initialize sonar Docker image)
+
+____
+
+Sonar run will work only on docker run and valid sonar user/password
+
+____
+
+=== Decisions
+
+____
+
+.
+
+____
+
+=== Future Steps
+
+* Use Testcontainers for unit test so real database can be simulated
+* Use caching technology for status check
+* Apply CI/CD pipeline
+* JWT implement via spring security
+* Multithreading for concurrent request via Cache
+
+=== Api Sample
+
+=== Read all customers
+
+[source,bash]
+----
+   GET http://127.0.0.1:8081/api/v1/administration/customers
+   Accept: application/json
+   Authorization: Bearer {jwt_token}
+----
+
+=== Create a customer
+
+[source,bash]
+----
+   POST http://localhost:8081/api/v1/administration/customers
+   Content-Type: application/json
+   Authorization: Bearer {jwt_token}
+   
+   {
+   
+     "active": true,
+     "siebelId": "TEST081",
+     "firstName": "aryan",
+     "lastName": "Shashi",
+     "email": "singh@gmail.com",
+     "countryCode": "EU",
+     "customerType": "ORGANIZATION",
+   }
+----

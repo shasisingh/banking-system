@@ -1,0 +1,20 @@
+name: my-personal-bank
+
+services:
+  postgres:
+    image: 'postgres:16-bullseye'
+    hostname: "localhost"
+    environment:
+      - 'POSTGRES_DB=fake-bank-db'
+      - 'POSTGRES_PASSWORD=fake-bank-db-password'
+      - 'POSTGRES_USER=bank-user'
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+  sonarqube:
+    image: sonarqube
+    expose:
+      - 9000
+    ports:
+      - "9000:9000"
